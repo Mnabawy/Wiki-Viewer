@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-
+import "./results.css";
 class Results extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +31,7 @@ class Results extends React.Component {
 
       const data = response.data.query.search;
       this.setState({ results: data });
-      console.log(data);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -41,17 +41,34 @@ class Results extends React.Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <label>Enter Your Search word:</label>
-          <input value={this.state.value} onChange={this.handleChange} />
+          <h2>Start Your Wiki Search Here</h2>
+          <label htmlFor="search">Search</label>
+          <input
+            id="search"
+            type="search"
+            pattern=".*\S.*"
+            required
+            value={this.state.value}
+            onChange={this.handleChange}
+          />
+          <span className="caret"></span>
         </form>
         <div className="result">
-          <ul>
-            {this.state.results.map((item) => (
-              <a href={`https://en.wikipedia.org/?curid=${item.pageid}`} target="_blank">
-                <li key={item.pageid}>{item.title}</li>
+          {this.state.results.map((item) => (
+            <div key={item.pageid} className="card">
+              <a
+                href={`https://en.wikipedia.org/?curid=${item.pageid}`}
+                target="_blank"
+              >
+                <ul>
+                  <li>
+                    <h1>{item.title}</h1>
+                    <p dangerouslySetInnerHTML={{ __html: item.snippet }}></p>
+                  </li>
+                </ul>
               </a>
-            ))}
-          </ul>
+            </div>
+          ))}
         </div>
       </div>
     );
